@@ -1,0 +1,85 @@
+@import 'https://unpkg.com/open-props/open-props.min.css';
+@import 'https://unpkg.com/open-props/normalize.min.css';
+
+.dynamic-island {
+  position: fixed;
+  top: var(--size-4);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: var(--size-10);
+  height: 40px;
+  transition: all 0.2s ease;
+  display: flex;
+  gap: var(--size-4);
+  justify-content: center;
+  align-items: center;
+  padding: var(--size-2) var(--size-6);
+  font-size: var(--font-size-1);
+  color: var(--gray-0);
+}
+
+.dynamic-island:after {
+  content: "";
+  height: 40px;
+  min-width: var(--size-10);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0) scaleX(var(--scale-x, 1));
+  border-radius: calc(var(--font-size-1) + var(--size-2));
+  width: calc(var(--width-imposed) * 1px);
+  background: var(--gray-9);
+  transition: width 0.2s var(--ease-elastic-2);
+  z-index: -1;
+}
+
+.dynamic-island__media {
+  animation: enter-media 0.2s 0.1s both;
+}
+
+.dynamic-island__info {
+  animation: enter-info 0.2s 0.1s both;
+}
+
+@keyframes enter-info {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enter-media {
+  from {
+    transform: scale(0);
+  }
+}
+
+.globe {
+  display: inline-block;
+  position: relative;
+}
+
+.globes {
+  position: relative;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+}
+
+.globes__placeholder {
+  color: transparent;
+}
+
+.globes__translater {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: inline-block;
+  transform: translate(0, -50%);
+  white-space: nowrap;
+  animation: globe-spin 0.5s infinite both steps(3);
+}
+
+@keyframes globe-spin {
+  to {
+    transform: translate(-100%, -50%);
+  }
+}

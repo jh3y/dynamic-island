@@ -1,0 +1,75 @@
+---
+import DynamicIsland from '../components/DynamicIsland.jsx'
+---
+<DynamicIsland client:load />
+<main>
+	<div class="controls">
+		<button class="hello">Hello</button>
+		<button class="battery">Battery</button>
+	</div>
+</main>
+<script>
+	'use strict';
+	const trigger = detail => () => {
+		const event = new CustomEvent('island:event', {
+			detail,
+			bubbles: true,
+			cancelable: false,
+			composed: true,
+		})
+		document.getElementById('transmitter').dispatchEvent(event)
+	}
+	const hello = document.querySelector('.hello')
+	hello.addEventListener('click', trigger({
+		info: 'Hello world!',
+		timeout: 3000,
+		media: `
+			<span class="globes">
+				<span class="globes__placeholder" role="img">🌎</span>
+				<span class="globes__translater" role="img">🌎🌏🌍</span>
+			</span>
+		`
+	}))
+	const battery = document.querySelector('.battery')
+	if (navigator.getBattery) {
+		battery.addEventListener('click', () => {
+			navigator.getBattery().then(battery => {
+				console.info(battery)
+				battery.onchargingchange = trigger({
+					info: 'Change',
+					timeout: 10000,
+					media: 'Cool'
+				})
+				trigger({
+					info: battery.charging ? 'Charging' : 'Battery Power',
+					timeout: 4000,
+					media: `
+
+						<span class="battery">
+							${battery.charging ? `
+									<span class="battery__info" role="img">⚡️ ${battery.level * 100}%</span>
+								` : `
+									<span class="battery__image">🔋 ${battery.level * 100}%</span>
+								`}
+						</span>
+					`
+				})()
+			})
+		})
+	} else {
+		battery.setAttribute('disabled', true)
+	}
+</script>
+
+<style>
+	main {
+		display: grid;
+		place-items: center;
+		min-height: 100vh;
+		background: var(--gradient-11);
+	}
+	button {
+		padding: var(--size-2) var(--size-4);
+		border-radius: var(--radius-3);
+	}
+</style>
