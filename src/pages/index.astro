@@ -16,11 +16,15 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 	<div class="controls">
 		<button class="hello">Hello</button>
 		<button class="charge">Battery</button>
+		<button class="loading">Loading</button>
+		<button class="youtube">Media</button>
 	</div>
 </main>
+<script is:inline src="https://www.youtube.com/iframe_api"></script>
 <script>
 	'use strict';
 	const trigger = detail => () => {
+		console.info(detail)
 		const event = new CustomEvent('island:event', {
 			detail,
 			bubbles: true,
@@ -45,18 +49,18 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		battery.addEventListener('click', () => {
 			navigator.getBattery().then(battery => {
 				console.info(battery)
-				battery.onchargingchange = b => {
+				battery.onchargingchange = () => {
 					trigger({
-						info: b.charging ? 'Charging' : 'Battery Power',
+						info: battery.charging ? 'Charging' : 'Battery Power',
 						timeout: 4000,
 						media: `
 							<span class="battery">
-								${b.charging ? `
+								${battery.charging ? `
 										<span class="battery__icon battery__icon--lightning" role="img">⚡️</span>
-										<span class="battery__text">&nbsp;${b.level * 100}%</span>
+										<span class="battery__text">&nbsp;${battery.level * 100}%</span>
 									` : `
 										<span class="battery__icon battery__icon--battery" role="img">🔋</span>
-										<span class="battery__text">&nbsp;${b.level * 100}%</span>
+										<span class="battery__text">&nbsp;${battery.level * 100}%</span>
 									`}
 							</span>
 						`
@@ -82,6 +86,69 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 	} else {
 		battery.setAttribute('disabled', true)
 	}
+
+	const loading = document.querySelector('.loading')
+	loading.addEventListener('click', trigger({
+		info: 'Loading...',
+		timeout: 4000,
+		media: `
+			<span class="loader" style="--count: 10;">
+				<span style="--index: 0;"></span>
+				<span style="--index: 1;"></span>
+				<span style="--index: 2;"></span>
+				<span style="--index: 3;"></span>
+				<span style="--index: 4;"></span>
+				<span style="--index: 5;"></span>
+				<span style="--index: 6;"></span>
+				<span style="--index: 7;"></span>
+				<span style="--index: 8;"></span>
+				<span style="--index: 9;"></span>
+			</span>
+		`
+	}))
+
+	const tube = document.querySelector('.youtube')
+	tube.addEventListener('click', () => {
+		trigger({
+			info: 'Ahh!',
+			timeout: false,
+			media: `
+				<span role="img">👀✨</span>
+			`,
+			box: `
+				<div class="youtube" style="width: 100%; aspect-ratio: 16 / 9;">
+					<div id="player"></div>
+				</div>
+			`,
+			cb: () => {
+				// const player = document.getElementById('player')
+				// console.info(player)
+				// const videoId = 'KkhpUSNe0y0'
+				const videoId = 'BBJa32lCaaY'
+				let player = new YT.Player('player', {
+				  videoId,
+				  // height: 200,
+				  // width: 200,
+				  events: {
+				    'onReady': ({target}) => { target.playVideo() },
+				    'onStateChange': ({ data }) => {
+				    	if (data === 0) {
+				    		console.info('need a teardown here...')
+				    		trigger({
+				    			info: null,
+				    			media: null,
+				    			cb: null,
+				    			timeout: false,
+				    			nuke: true
+				    		})()
+				    	}
+				    }
+				  }
+				});
+			}
+		})()
+	})
+
 </script>
 
 <style>

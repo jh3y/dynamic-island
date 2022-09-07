@@ -1,43 +1,66 @@
 import React from 'react'
 import styles from './dynamic-island.css'
 
+import template from './notch-template.png'
+import lens from './lens.png'
+
 const DynamicIsland = () => {
   const timerRef = React.useRef(null)
   const islandRef = React.useRef(null)
   const mediaRef = React.useRef(null)
   const infoRef = React.useRef(null)
+  const centerRef = React.useRef(null)
   const scaleRef = React.useRef(null)
+  const cbRef = React.useRef(null)
   const [info, setInfo]   = React.useState(null)
   const [media, setMedia] = React.useState(null)
+  const [box, setBox] = React.useState(null)
   
   React.useEffect(() => {
-    const processIsland = ({ detail: { info, media, timeout } }) => {
+    const winddown = () => {
+      const anims = []
+      
+      if (mediaRef.current)
+        anims.push(mediaRef.current.animate({
+          scale: 0
+        }, {
+          duration: 200,
+          fill: 'forwards'
+        }).finished)
+      if (infoRef.current)
+        anims.push(infoRef.current.animate({
+          opacity: 0,
+        }, {
+          duration: 200,
+          fill: 'forwards'
+        }).finished)
+      if (centerRef.current)
+        anims.push(centerRef.current.animate({
+          opacity: 0,
+        }, {
+          duration: 200,
+          fill: 'forwards'
+        }).finished)
+      if (anims.length) {
+        Promise.all(anims).then(() => {
+          setInfo(null)
+          setMedia(null)
+          setBox(null)
+        })
+      }
+    }
+    const processIsland = ({ detail: { box, info, media, timeout, cb, nuke } }) => {
+      if (nuke) return winddown()
+      
       setInfo(info)
       setMedia(media)
+      setBox(box)
+      cbRef.current = cb
 
-      // const winddown = () => {
-      //   const tl = mediaRef.current.animate({
-      //     scale: 0
-      //   }, {
-      //     duration: 200,
-      //     fill: 'forwards'
-      //   })
-      //   infoRef.current.animate({
-      //     opacity: 0,
-      //   }, {
-      //     duration: 200,
-      //     fill: 'forwards'
-      //   })
-      //   tl.finished.then(() => {
-      //     setInfo(null)
-      //     setMedia(null)
-      //   })
-      // }
-
-      // if (timeout) {
-      //   if (timerRef.current) clearTimeout(timerRef.current)
-      //   timerRef.current = setTimeout(winddown, timeout)
-      // }
+      if (timeout) {
+        if (timerRef.current) clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(winddown, timeout)
+      }
     }
     document.body.addEventListener('island:event', processIsland)
     return () => {
@@ -47,15 +70,33 @@ const DynamicIsland = () => {
   }, [])
   
   React.useEffect(() => {
-    const { width } = islandRef.current.getBoundingClientRect()
+    const { height, width } = islandRef.current.getBoundingClientRect()
     islandRef.current.style.setProperty('--width-imposed', width)
-  }, [info])
+    islandRef.current.style.setProperty('--height-imposed', height)
+    if (cbRef.current) {
+      cbRef.current()
+      const { height, width } = islandRef.current.getBoundingClientRect()
+      islandRef.current.style.setProperty('--width-imposed', width)
+      islandRef.current.style.setProperty('--height-imposed', height)
+      cbRef.current = null
+    }
+  }, [info, media, box])
 
   return (
     <>
       <div ref={islandRef} className="dynamic-island">
-        {info ? <div ref={infoRef} className="dynamic-island__info">{info}</div> : null}
-        {media ? <div ref={mediaRef} className="dynamic-island__media" dangerouslySetInnerHTML={{__html: media}}></div> : null}
+        <div className="dynamic-island__stage dynamic-island__stage--left">
+          {info ? <div ref={infoRef} className="dynamic-island__info">{info}</div> : null}
+        </div>
+        <div className="dynamic-island__stage dynamic-island__stage--camera">
+          <img className="dynamic-island__lens" src={lens} />
+        </div>
+        <div className="dynamic-island__stage dynamic-island__stage--right">
+          {media ? <div ref={mediaRef} className="dynamic-island__media" dangerouslySetInnerHTML={{__html: media}}></div> : null}
+        </div>
+        <div className="dynamic-island__stage dynamic-island__stage--center">
+          {box ? <div ref={centerRef} className="dynamic-island__center" dangerouslySetInnerHTML={{__html: box}}></div> : null}
+        </div>
       </div>
       <span id="transmitter"></span>
     </>
