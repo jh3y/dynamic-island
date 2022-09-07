@@ -1,7 +1,17 @@
 ---
 import DynamicIsland from '../components/DynamicIsland.jsx'
 ---
-<DynamicIsland client:load />
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Dynamic Island 🏝</title>
+	</head>
+	<body>
+		<DynamicIsland client:load />
 <main>
 	<div class="controls">
 		<button class="hello">Hello</button>
@@ -36,15 +46,22 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 			navigator.getBattery().then(battery => {
 				console.info(battery)
 				battery.onchargingchange = trigger({
-					info: 'Change',
-					timeout: 10000,
-					media: 'Cool'
+					info: battery.charging ? 'Charging' : 'Battery Power',
+					timeout: 4000,
+					media: `
+						<span class="battery">
+							${battery.charging ? `
+									<span class="battery__info" role="img">⚡️ ${battery.level * 100}%</span>
+								` : `
+									<span class="battery__image">🔋 ${battery.level * 100}%</span>
+								`}
+						</span>
+					`
 				})
 				trigger({
 					info: battery.charging ? 'Charging' : 'Battery Power',
 					timeout: 4000,
 					media: `
-
 						<span class="battery">
 							${battery.charging ? `
 									<span class="battery__info" role="img">⚡️ ${battery.level * 100}%</span>
@@ -73,3 +90,6 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		border-radius: var(--radius-3);
 	}
 </style>
+
+	</body>
+</html>

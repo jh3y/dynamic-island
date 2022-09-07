@@ -9,7 +9,7 @@
   min-width: var(--size-10);
   height: 40px;
   transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   gap: var(--size-4);
   justify-content: center;
   align-items: center;
@@ -27,7 +27,7 @@
   left: 50%;
   transform: translate(-50%, 0) scaleX(var(--scale-x, 1));
   border-radius: calc(var(--font-size-1) + var(--size-2));
-  width: calc(var(--width-imposed) * 1px);
+  width: calc(var(--width-imposed, 40) * 1px);
   background: var(--gray-9);
   transition: width 0.2s var(--ease-elastic-2);
   z-index: -1;
