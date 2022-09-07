@@ -15,29 +15,29 @@ const DynamicIsland = () => {
       setInfo(info)
       setMedia(media)
 
-      const winddown = () => {
-        const tl = mediaRef.current.animate({
-          scale: 0
-        }, {
-          duration: 200,
-          fill: 'forwards'
-        })
-        infoRef.current.animate({
-          opacity: 0,
-        }, {
-          duration: 200,
-          fill: 'forwards'
-        })
-        tl.finished.then(() => {
-          setInfo(null)
-          setMedia(null)
-        })
-      }
+      // const winddown = () => {
+      //   const tl = mediaRef.current.animate({
+      //     scale: 0
+      //   }, {
+      //     duration: 200,
+      //     fill: 'forwards'
+      //   })
+      //   infoRef.current.animate({
+      //     opacity: 0,
+      //   }, {
+      //     duration: 200,
+      //     fill: 'forwards'
+      //   })
+      //   tl.finished.then(() => {
+      //     setInfo(null)
+      //     setMedia(null)
+      //   })
+      // }
 
-      if (timeout) {
-        if (timerRef.current) clearTimeout(timerRef.current)
-        timerRef.current = setTimeout(winddown, timeout)
-      }
+      // if (timeout) {
+      //   if (timerRef.current) clearTimeout(timerRef.current)
+      //   timerRef.current = setTimeout(winddown, timeout)
+      // }
     }
     document.body.addEventListener('island:event', processIsland)
     return () => {

@@ -34,6 +34,7 @@
 }
 
 .dynamic-island__media {
+  display: flex;
   animation: enter-media 0.2s 0.1s both;
 }
 
@@ -53,6 +54,10 @@
   }
 }
 
+.battery {
+  display: flex;
+}
+
 .globe {
   display: inline-block;
   position: relative;
@@ -62,6 +67,23 @@
   position: relative;
   overflow: hidden;
   clip-path: inset(0 0 0 0);
+}
+
+.battery__icon--lightning {
+  display: inline-block;
+  animation: lightning 1s infinite;
+}
+
+@keyframes lightning {
+  0%, 10%, 20% {
+    transform:  skew(15deg);
+  }
+  5%, 15%, 25% {
+    transform:  skew(-15deg);
+  }
+  30%, 100% {
+    transform:  skew(0deg);
+  }
 }
 
 .globes__placeholder {

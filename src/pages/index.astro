@@ -15,7 +15,7 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 <main>
 	<div class="controls">
 		<button class="hello">Hello</button>
-		<button class="battery">Battery</button>
+		<button class="charge">Battery</button>
 	</div>
 </main>
 <script>
@@ -40,33 +40,39 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 			</span>
 		`
 	}))
-	const battery = document.querySelector('.battery')
+	const battery = document.querySelector('.charge')
 	if (navigator.getBattery) {
 		battery.addEventListener('click', () => {
 			navigator.getBattery().then(battery => {
 				console.info(battery)
-				battery.onchargingchange = trigger({
-					info: battery.charging ? 'Charging' : 'Battery Power',
-					timeout: 4000,
-					media: `
-						<span class="battery">
-							${battery.charging ? `
-									<span class="battery__info" role="img">⚡️ ${battery.level * 100}%</span>
-								` : `
-									<span class="battery__image">🔋 ${battery.level * 100}%</span>
-								`}
-						</span>
-					`
-				})
+				battery.onchargingchange = b => {
+					trigger({
+						info: b.charging ? 'Charging' : 'Battery Power',
+						timeout: 4000,
+						media: `
+							<span class="battery">
+								${b.charging ? `
+										<span class="battery__icon battery__icon--lightning" role="img">⚡️</span>
+										<span class="battery__text">&nbsp;${b.level * 100}%</span>
+									` : `
+										<span class="battery__icon battery__icon--battery" role="img">🔋</span>
+										<span class="battery__text">&nbsp;${b.level * 100}%</span>
+									`}
+							</span>
+						`
+					})()
+				}
 				trigger({
 					info: battery.charging ? 'Charging' : 'Battery Power',
 					timeout: 4000,
 					media: `
 						<span class="battery">
 							${battery.charging ? `
-									<span class="battery__info" role="img">⚡️ ${battery.level * 100}%</span>
+									<span class="battery__icon battery__icon--lightning" role="img">⚡️</span>
+									<span class="battery__text">&nbsp;${battery.level * 100}%</span>
 								` : `
-									<span class="battery__image">🔋 ${battery.level * 100}%</span>
+									<span class="battery__icon battery__icon--battery" role="img">🔋</span>
+									<span class="battery__text">&nbsp;${battery.level * 100}%</span>
 								`}
 						</span>
 					`
