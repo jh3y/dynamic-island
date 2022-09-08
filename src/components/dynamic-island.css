@@ -2,7 +2,9 @@
 @import 'https://unpkg.com/open-props/normalize.min.css';
 
 .dynamic-island {
-  --height: 50px;
+  --height: 36px;
+  --font-size: calc(var(--height) * 0.35);
+  --camera-size: calc(3.6 * var(--height));
   position: fixed;
   top: var(--size-4);
   left: 50%;
@@ -15,13 +17,17 @@
   justify-content: center;
   align-items: center;
   font-size: var(--font-size-1);
+  font-size: var(--font-size);
   color: var(--gray-0);
   /*background: grey;*/
   /*opacity: 0.5;*/
   display: grid;
   align-items: center;
-  grid-template-columns: var(--auxiliary-width, 1fr) 180px var(--auxiliary-width, 1fr);
+  grid-template-columns: var(--auxiliary-width, 1fr) var(--camera-size) var(--auxiliary-width, 1fr);
   grid-template-rows: var(--height) 1fr;
+}
+@media(min-width: 768px) {
+  .dynamic-island { --height: 50px; }
 }
 
 .dynamic-island:after {
@@ -31,8 +37,8 @@
   top: 0;
   left: 50%;
   transform: translate(-50%, 0) scaleX(var(--scale-x, 1));
-  border-radius: calc(var(--font-size-1) + var(--size-2));
-  min-width: 180px;
+  border-radius: calc(var(--font-size) + var(--size-2));
+  min-width: var(--camera-size);
   width: calc(var(--width-imposed, 40) * 1px);
   height: calc(var(--height-imposed, 40) * 1px);
   background: var(--gray-9);
@@ -48,7 +54,7 @@
 }
 
 .dynamic-island__stage--camera {
-  width: 180px;
+  width: var(--camera-size);
   display: flex;
   justify-content: end;
   padding-right: var(--size-4);

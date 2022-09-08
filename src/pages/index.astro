@@ -55,10 +55,10 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 							<span class="battery">
 								${battery.charging ? `
 										<span class="battery__icon battery__icon--lightning" role="img">⚡️</span>
-										<span class="battery__text">&nbsp;${battery.level * 100}%</span>
+										<span class="battery__text">&nbsp;${`${Math.round(battery.level * 100)}`.padStart(2, 0)}%</span>
 									` : `
 										<span class="battery__icon battery__icon--battery" role="img">🔋</span>
-										<span class="battery__text">&nbsp;${battery.level * 100}%</span>
+										<span class="battery__text">&nbsp;${`${Math.round(battery.level * 100)}`.padStart(2, 0)}%</span>
 									`}
 							</span>
 						`
@@ -71,10 +71,10 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 						<span class="battery">
 							${battery.charging ? `
 									<span class="battery__icon battery__icon--lightning" role="img">⚡️</span>
-									<span class="battery__text">&nbsp;${battery.level * 100}%</span>
+									<span class="battery__text">&nbsp;${`${Math.round(battery.level * 100)}`.padStart(2, 0)}%</span>
 								` : `
 									<span class="battery__icon battery__icon--battery" role="img">🔋</span>
-									<span class="battery__text">&nbsp;${battery.level * 100}%</span>
+									<span class="battery__text">&nbsp;${`${Math.round(battery.level * 100)}`.padStart(2, 0)}%</span>
 								`}
 						</span>
 					`
