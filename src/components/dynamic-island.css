@@ -20,7 +20,7 @@
   /*opacity: 0.5;*/
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr 180px 1fr;
+  grid-template-columns: var(--auxiliary-width, 1fr) 180px var(--auxiliary-width, 1fr);
   grid-template-rows: var(--height) 1fr;
 }
 
@@ -44,6 +44,7 @@
 .dynamic-island__media {
   display: flex;
   animation: enter-media 0.2s 0.1s both;
+  white-space: nowrap;
 }
 
 .dynamic-island__stage--camera {
@@ -57,9 +58,6 @@
   height: calc(var(--height) * 0.5);
   opacity: 0.5;
   aspect-ratio: 1;
-}
-
-.dynamic-island__stage--left {
 }
 
 .dynamic-island__stage--center {

@@ -70,6 +70,13 @@ const DynamicIsland = () => {
   }, [])
   
   React.useEffect(() => {
+    if (media || info) {
+      const { width: leftWidth } = islandRef.current.querySelector('.dynamic-island__stage--left').getBoundingClientRect()
+      const { width: rightWidth } = islandRef.current.querySelector('.dynamic-island__stage--right').getBoundingClientRect()
+      if (Math.max(leftWidth, rightWidth) !== 0) islandRef.current.style.setProperty('--auxiliary-width', `${Math.floor(Math.max(leftWidth, rightWidth))}px`)      
+    } else {
+      islandRef.current.style.setProperty('--auxiliary-width', '1fr')
+    }
     const { height, width } = islandRef.current.getBoundingClientRect()
     islandRef.current.style.setProperty('--width-imposed', width)
     islandRef.current.style.setProperty('--height-imposed', height)
