@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './dynamic-island.css'
 
-import template from './notch-template.png'
 import lens from './lens.png'
 
 const DynamicIsland = () => {
@@ -93,7 +92,7 @@ const DynamicIsland = () => {
     <>
       <div ref={islandRef} className="dynamic-island">
         <div className="dynamic-island__stage dynamic-island__stage--left">
-          {info ? <div ref={infoRef} className="dynamic-island__info">{info}</div> : null}
+          {info ? <div ref={infoRef} className="dynamic-island__info" dangerouslySetInnerHTML={{__html: info}}></div> : null}
         </div>
         <div className="dynamic-island__stage dynamic-island__stage--camera">
           <img className="dynamic-island__lens" src={lens} />

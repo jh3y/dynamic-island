@@ -119,6 +119,16 @@
   transform: translate(0, -19%);
 }
 
+.shades {
+  display: inline-block;
+  animation:  pump 0.55s infinite ease-out;
+  margin-left: var(--size-4);
+}
+
+@keyframes pump {
+  to { scale: 1.5; }
+}
+
 .battery {
   display: flex;
 }
