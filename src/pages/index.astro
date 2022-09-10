@@ -19,6 +19,7 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		<button class="loading">Loading</button>
 		<button class="youtube">Media</button>
 		<button class="island">Island</button>
+		<button class="audio">Audio</button>
 	</div>
 </main>
 <script is:inline src="https://www.youtube.com/iframe_api"></script>
@@ -36,7 +37,7 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 	const hello = document.querySelector('.hello')
 	hello.addEventListener('click', trigger({
 		info: 'Hello world!',
-		timeout: 3000,
+		timeout: 30000,
 		media: `
 			<span class="globes">
 				<span class="globes__placeholder" role="img">🌎</span>
@@ -126,6 +127,22 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		`
 	}))
 
+	const audio = document.querySelector('.audio')
+	audio.addEventListener('click', trigger({
+		info: '<img src="https://placekitten.com/400/400" />',
+		timeout: 4000,
+		media: `
+			<span class="eq-bars">
+				<span style="--index: 3;"></span>
+				<span style="--index: 2;"></span>
+				<span style="--index: 4;"></span>
+				<span style="--index: 1;"></span>
+				<span style="--index: 0;"></span>
+				<span style="--index: 2;"></span>
+			</span>
+		`
+	}))
+
 	const tube = document.querySelector('.youtube')
 	tube.addEventListener('click', () => {
 		trigger({
@@ -175,7 +192,7 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		display: grid;
 		place-items: center;
 		min-height: 100vh;
-		background: var(--gradient-11);
+		background: var(--gradient-15);
 	}
 	button {
 		padding: var(--size-2) var(--size-4);

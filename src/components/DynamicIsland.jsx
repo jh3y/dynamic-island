@@ -127,10 +127,12 @@ const DynamicIsland = () => {
 
       const { width: leftWidth } = islandRef.current.querySelector('.dynamic-island__stage--left').getBoundingClientRect()
       const { width: rightWidth } = islandRef.current.querySelector('.dynamic-island__stage--right').getBoundingClientRect()
-      const { height, width } = islandRef.current.getBoundingClientRect()
+      const { width: cameraWidth } = islandRef.current.querySelector('.dynamic-island__stage--camera').getBoundingClientRect()
       
       if (Math.max(leftWidth, rightWidth) !== 0) islandRef.current.style.setProperty('--auxiliary-width', `${Math.floor(Math.max(leftWidth, rightWidth))}px`)      
       
+      const { height, width } = islandRef.current.getBoundingClientRect()
+
       islandRef.current.style.setProperty('--width-imposed', Math.floor(width))
       islandRef.current.style.setProperty('--height-imposed', Math.floor(height))
     }

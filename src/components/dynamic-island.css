@@ -38,20 +38,44 @@
   top: 0;
   left: 50%;
   transform: translate(-50%, 0) scaleX(var(--scale-x, 1));
-  border-radius: calc(var(--font-size) + var(--size-2));
+  border-radius: calc(var(--height) * 0.5);
   min-width: var(--camera-size);
   width: calc(var(--width-imposed, 40) * 1px);
   height: calc(var(--height-imposed, 40) * 1px);
   background: hsl(45 calc(var(--island, 0) * 60%) calc(var(--island, 0) * 50%));
   transition: width 0.2s var(--ease-elastic-2), height 0.2s var(--ease-elastic-2), background 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0 calc(var(--height) * var(--island, 0)) calc(var(--height) * var(--island, 0)) hsl(210 40% 60%);
+  box-shadow: 0 0 calc((var(--height) * 0.5) * var(--island, 0)) calc((var(--height) * 0.5) * var(--island, 0)) hsl(210 60% 60%);
   z-index: -1;
   /*opacity: 0.8;*/
 }
 
+.eq-bars {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 2px;
+  height: calc(var(--height) * 0.5);
+}
+
+.eq-bars span {
+  display: inline-block;
+  background: green;
+  width: 4px;
+  border-radius: 2px;
+  transform-origin: 50% 50%;
+  background: linear-gradient(var(--pink-1), var(--pink-3), var(--pink-1)) 0 0 / 100% 100% fixed;
+  animation: eq calc(var(--index) * 0.3s) calc(var(--index) * -0.2s) infinite ease-in-out;
+}
+
+@keyframes eq {
+  50% {
+    transform: scaleY(0.25);
+  }
+}
+
 .palm {
   display: inline-block;
-  /*animation: palm 0.2s both;*/
+  animation: palm 0.2s both;
   transform-origin: 50% 100%;
 }
 
@@ -142,6 +166,16 @@
   padding-left: var(--size-4);
   white-space: nowrap;
   animation: enter-info 0.2s 0.1s both;
+}
+
+.dynamic-island__info:has(img) {
+  padding-left: calc(var(--height) * 0.1);
+}
+
+.dynamic-island__info img {
+  width: calc(var(--height) * 0.8);
+  border-radius: 50%;
+  aspect-ratio:  1;
 }
 
 .dynamic-island__media {
