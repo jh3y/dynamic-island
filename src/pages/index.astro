@@ -18,6 +18,7 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		<button class="charge">Battery</button>
 		<button class="loading">Loading</button>
 		<button class="youtube">Media</button>
+		<button class="island">Island</button>
 	</div>
 </main>
 <script is:inline src="https://www.youtube.com/iframe_api"></script>
@@ -105,6 +106,26 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 		`
 	}))
 
+	const island = document.querySelector('.island')
+	island.addEventListener('click', trigger({
+		info: '⛱',
+		timeout: 4000,
+		cb: () => {
+			document.querySelector('.dynamic-island').style.setProperty('--island', 1)
+		},
+		timerCb: () => {
+			document.querySelector('.dynamic-island').style.setProperty('--island', 0)
+		},
+		media: `
+			<span role="img" class="palm">
+				🌴
+			</span>
+			<span role="img" class="shark">
+				🦈
+			</span>
+		`
+	}))
+
 	const tube = document.querySelector('.youtube')
 	tube.addEventListener('click', () => {
 		trigger({
@@ -119,14 +140,9 @@ import DynamicIsland from '../components/DynamicIsland.jsx'
 				</div>
 			`,
 			cb: () => {
-				// const player = document.getElementById('player')
-				// console.info(player)
-				// const videoId = 'KkhpUSNe0y0'
 				const videoId = 'BBJa32lCaaY'
 				let player = new YT.Player('player', {
 				  videoId,
-				  // height: 200,
-				  // width: 200,
 				  playerVars: {
 				  	controls: 1,
 				  	modestbranding: 1,

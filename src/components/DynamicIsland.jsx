@@ -11,6 +11,8 @@ const DynamicIsland = () => {
   const centerRef = React.useRef(null)
   const scaleRef = React.useRef(null)
   const cbRef = React.useRef(null)
+  const sizingRef = React.useRef(null)
+  const timerCbRef = React.useRef(null)
   const [info, setInfo]   = React.useState(null)
   const [media, setMedia] = React.useState(null)
   const [box, setBox] = React.useState(null)
@@ -18,10 +20,13 @@ const DynamicIsland = () => {
   React.useEffect(() => {
     const winddown = () => {
       const anims = []
-      
+      if (timerCbRef.current) {
+        timerCbRef.current()
+        timerCbRef.current = null
+      }
       if (mediaRef.current)
         anims.push(mediaRef.current.animate({
-          scale: 0
+          opacity: 0
         }, {
           duration: 200,
           fill: 'forwards'
@@ -48,16 +53,20 @@ const DynamicIsland = () => {
         })
       }
     }
-    const processIsland = ({ detail: { box, info, media, timeout, cb, nuke } }) => {
+    const processIsland = ({ detail: { box, info, media, timeout, cb, nuke, timerCb } }) => {
       if (nuke) return winddown()
       
       setInfo(info)
       setMedia(media)
       setBox(box)
       cbRef.current = cb
+      timerCbRef.current = timerCb
 
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        document.querySelector('.dynamic-island').style.setProperty('--island', 0)
+      }
       if (timeout) {
-        if (timerRef.current) clearTimeout(timerRef.current)
         timerRef.current = setTimeout(winddown, timeout)
       }
     }
@@ -67,31 +76,76 @@ const DynamicIsland = () => {
       document.body.removeEventListener('island:event', processIsland)
     }
   }, [])
-  
+
   React.useEffect(() => {
-    if (media || info) {
-      const { width: leftWidth } = islandRef.current.querySelector('.dynamic-island__stage--left').getBoundingClientRect()
-      const { width: rightWidth } = islandRef.current.querySelector('.dynamic-island__stage--right').getBoundingClientRect()
-      if (Math.max(leftWidth, rightWidth) !== 0) islandRef.current.style.setProperty('--auxiliary-width', `${Math.floor(Math.max(leftWidth, rightWidth))}px`)      
-    } else {
-      islandRef.current.style.setProperty('--auxiliary-width', '1fr')
+    islandRef.current.style.removeProperty('--auxiliary-width')
+    islandRef.current.style.removeProperty('--width-imposed')
+    islandRef.current.style.removeProperty('--height-imposed')
+    // Animate the things in
+    if (mediaRef.current) {
+        mediaRef.current.animate([
+        {
+          opacity: 0
+        },
+        {
+          opacity: 1
+        }
+      ], {
+        fill: 'both',
+        duration: 200,
+        delay: 100,
+      })
+    } 
+    if (infoRef.current) {
+      infoRef.current.animate([
+        { opacity: 0}, {opacity: 1}
+      ], {
+        fill: 'both',
+        duration: 200,
+        delay: 100,
+      })
     }
-    const { height, width } = islandRef.current.getBoundingClientRect()
-    islandRef.current.style.setProperty('--width-imposed', width)
-    islandRef.current.style.setProperty('--height-imposed', height)
+    if (centerRef.current) {
+      centerRef.current.animate([
+        { opacity: 0}, {opacity: 1}
+      ], {
+        fill: 'both',
+        duration: 200,
+        delay: 100,
+      })
+    }
     if (cbRef.current) {
       cbRef.current()
-      const { height, width } = islandRef.current.getBoundingClientRect()
-      islandRef.current.style.setProperty('--width-imposed', width)
-      islandRef.current.style.setProperty('--height-imposed', height)
       cbRef.current = null
     }
+
   }, [info, media, box])
+
+  React.useEffect(() => {
+    const update = entries => {
+      if (!entries.length) return
+
+      const { width: leftWidth } = islandRef.current.querySelector('.dynamic-island__stage--left').getBoundingClientRect()
+      const { width: rightWidth } = islandRef.current.querySelector('.dynamic-island__stage--right').getBoundingClientRect()
+      const { height, width } = islandRef.current.getBoundingClientRect()
+      
+      if (Math.max(leftWidth, rightWidth) !== 0) islandRef.current.style.setProperty('--auxiliary-width', `${Math.floor(Math.max(leftWidth, rightWidth))}px`)      
+      
+      islandRef.current.style.setProperty('--width-imposed', Math.floor(width))
+      islandRef.current.style.setProperty('--height-imposed', Math.floor(height))
+    }
+    const islandObserver = new ResizeObserver(update)
+    islandObserver.observe(sizingRef.current)
+    return () => {
+      islandObserver.unobserve(sizingRef.current)
+    }
+  }, [])
+  
 
   return (
     <>
       <div ref={islandRef} className="dynamic-island">
-        <div className="dynamic-island__stage dynamic-island__stage--left">
+        <div ref={sizingRef} className="dynamic-island__stage dynamic-island__stage--left">
           {info ? <div ref={infoRef} className="dynamic-island__info" dangerouslySetInnerHTML={{__html: info}}></div> : null}
         </div>
         <div className="dynamic-island__stage dynamic-island__stage--camera">

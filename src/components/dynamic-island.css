@@ -23,8 +23,9 @@
   /*opacity: 0.5;*/
   display: grid;
   align-items: center;
-  grid-template-columns: var(--auxiliary-width, 1fr) var(--camera-size) var(--auxiliary-width, 1fr);
+  grid-template-columns: auto var(--camera-size) auto;
   grid-template-rows: var(--height) 1fr;
+  transform-style: preserve-3d;
 }
 @media(min-width: 768px) {
   .dynamic-island { --height: 50px; }
@@ -41,16 +42,62 @@
   min-width: var(--camera-size);
   width: calc(var(--width-imposed, 40) * 1px);
   height: calc(var(--height-imposed, 40) * 1px);
-  background: var(--gray-9);
-  transition: width 0.2s var(--ease-elastic-2), height 0.2s var(--ease-elastic-2);
+  background: hsl(45 calc(var(--island, 0) * 60%) calc(var(--island, 0) * 50%));
+  transition: width 0.2s var(--ease-elastic-2), height 0.2s var(--ease-elastic-2), background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 calc(var(--height) * var(--island, 0)) calc(var(--height) * var(--island, 0)) hsl(210 40% 60%);
   z-index: -1;
   /*opacity: 0.8;*/
 }
 
+.palm {
+  display: inline-block;
+  /*animation: palm 0.2s both;*/
+  transform-origin: 50% 100%;
+}
+
+@keyframes palm {
+  0% {
+    transform: translateY(50%) scale(0);
+  }
+  to {
+    transform: translateY(50%) scale(3);
+  }
+}
+
+.shark {
+  font-size: 2rem;
+  position: absolute;
+  top:  100%;
+  width: 2rem;
+  aspect-ratio:  1;
+  display: inline-block;
+  transform-style: preserve-3d;
+  clip-path: inset(0 0 50% 0);
+  animation: shark-translate 1s infinite alternate linear, shark-rotate 1s infinite alternate steps(1) backwards;
+}
+
+@keyframes shark-translate {
+  to {
+    translate: -400% 0;
+  }
+}
+
+@keyframes shark-rotate {
+  0% {
+    transform: translateZ(100px) rotateY(0deg);
+  }
+  to {
+    transform: translateZ(100px) rotateY(180deg);
+  }
+}
+
 .dynamic-island__media {
   display: flex;
-  animation: enter-media 0.2s 0.1s both;
   white-space: nowrap;
+}
+.dynamic-island__media,
+.dynamic-island__info {
+  width: var(--auxiliary-width);
 }
 
 .dynamic-island__stage--camera {
@@ -75,6 +122,10 @@
   overflow: hidden;
 }
 
+.dynamic-island__stage, .dynamic-island__media {
+  transform-style: preserve-3d;
+}
+
 #player {
   max-width: 100%;
   width: 100%;
@@ -84,7 +135,6 @@
 
 .dynamic-island__center {
   padding: var(--size-4);
-  animation: enter-info 0.2s 0.1s both;
   width: 100%;
 }
 
@@ -98,18 +148,6 @@
   padding-right: var(--size-4);
   display: flex;
   justify-content: flex-end;
-}
-
-@keyframes enter-info {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes enter-media {
-  from {
-    transform: scale(0);
-  }
 }
 
 .template {
